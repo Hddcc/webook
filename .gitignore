@@ -1,0 +1,31 @@
+# Personal materials and course recordings
+简历/
+codetest/
+*.mp4
+*.mkv
+*.avi
+*.mov
+
+# Notes, process documents, and generated documentation
+*.md
+过程文件/
+过程资料/
+过程记录/
+
+# Local/editor/system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+
+# Go build/test output
+*.exe
+*.test
+*.out
+
+# Node/Next local dependencies and build output
+**/node_modules/
+**/.next/
+**/out/
+*.tsbuildinfo
