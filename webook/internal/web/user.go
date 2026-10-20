@@ -1,15 +1,29 @@
 package web
 
 import (
-	"fmt"
 	"net/http"
 	"regexp"
+	"webook/internal/domain"
+	"webook/internal/service"
 
 	"github.com/gin-gonic/gin"
 )
 
 // UserHandler 定义所有与user有关的路由
 type UserHandler struct {
+	svc         *service.UserService
+	emailExp    *regexp.Regexp
+	passwordExp *regexp.Regexp
+}
+
+func NewUserHandler(svc *service.UserService) *UserHandler {
+	emailExp := regexp.MustCompile(emailRegexPattern)
+	passwordExp := regexp.MustCompile(passwordRegexPattern)
+	return &UserHandler{
+		svc:         svc,
+		emailExp:    emailExp,
+		passwordExp: passwordExp,
+	}
 }
 
 func (u *UserHandler) RegisterRoutes(server *gin.Engine) {
@@ -57,8 +71,17 @@ func (u *UserHandler) SignUp(ctx *gin.Context) {
 		ctx.String(http.StatusBadRequest, "密码必须大于8位、包含数字和特殊字符")
 		return
 	}
+
+	err = u.svc.SignUp(ctx.Request.Context(), domain.User{
+		Email:    req.Email,
+		Password: req.Password,
+	})
+	if err != nil {
+		ctx.String(http.StatusInternalServerError, "系统错误")
+		return
+	}
+
 	ctx.String(http.StatusOK, "注册成功")
-	fmt.Printf("%v", req)
 }
 
 func (u *UserHandler) Login(ctx *gin.Context) {
