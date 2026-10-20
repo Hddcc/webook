@@ -29,3 +29,7 @@ Thumbs.db
 **/.next/
 **/out/
 *.tsbuildinfo
+
+# Local Compose secrets
+**/.env
+**/.env.local
