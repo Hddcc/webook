@@ -76,6 +76,12 @@ func (u *UserHandler) SignUp(ctx *gin.Context) {
 		Email:    req.Email,
 		Password: req.Password,
 	})
+
+	if err == service.ErrUserDuplicateEmail {
+		ctx.String(http.StatusBadRequest, "邮箱已被注册")
+		return
+	}
+
 	if err != nil {
 		ctx.String(http.StatusInternalServerError, "系统错误")
 		return
