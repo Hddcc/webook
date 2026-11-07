@@ -6,12 +6,12 @@ import (
 	"time"
 
 	mysqldriver "github.com/go-sql-driver/mysql"
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 var (
 	ErrUserDuplicateEmail = errors.New("邮箱已被注册")
+	ErrUserNotFound       = errors.New("用户不存在")
 )
 
 type UserDAO struct {
@@ -22,6 +22,15 @@ func NewUserDAO(db *gorm.DB) *UserDAO {
 	return &UserDAO{
 		db: db,
 	}
+}
+
+func (dao *UserDAO) FindByEmail(ctx context.Context, email string) (User, error) {
+	var user User
+	err := dao.db.WithContext(ctx).Where("email = ?", email).First(&user).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return User{}, ErrUserNotFound
+	}
+	return user, err
 }
 
 func (dao *UserDAO) Insert(ctx context.Context, u User) error {
