@@ -100,7 +100,7 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 	if err := ctx.Bind(&req); err != nil {
 		return
 	}
-	user,err := u.svc.Login(ctx, req.Email, req.Password)
+	user, err := u.svc.Login(ctx, req.Email, req.Password)
 	if err == service.ErrInvalidUserOrPassword {
 		ctx.String(http.StatusBadRequest, "邮箱或密码错误")
 		return
@@ -112,9 +112,9 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 	sess := sessions.Default(ctx)
 	sess.Set("userId", user.Id)
 	sess.Save()
-	
-	ctx.String(http.StatusOK, "登录成功")
 
+	ctx.String(http.StatusOK, "登录成功")
+	return
 }
 
 func (u *UserHandler) Edit(ctx *gin.Context) {
@@ -122,5 +122,5 @@ func (u *UserHandler) Edit(ctx *gin.Context) {
 }
 
 func (u *UserHandler) Profile(ctx *gin.Context) {
-
+	ctx.String(http.StatusOK, "这是你的profile")
 }
